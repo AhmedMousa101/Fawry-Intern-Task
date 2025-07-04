@@ -37,20 +37,20 @@ public class Customer {
             Product product = item.getProduct();
 
             if (product.isExpired()) {
-                throw new IllegalStateException("model.Product is expired: " + product.getName());
+                throw new IllegalStateException(product.getName() + " is expired");
             }
 
             if (item.getQuantity() > product.getQuantity()) {
-                throw new IllegalStateException("model.Product out of stock: " + product.getName());
+                throw new IllegalStateException(product.getName() + " out of stock");
             }
 
             subtotal += item.getPrice();
 
             if (product.isShippable()) {
-                shippingFees += 10.0;
+                shippingFees += 10.0 * item.getQuantity();
                 shippableItems.add(new Shippable() {
-                    public String getName() { return product.getName(); }
-                    public double getWeight() { return product.getWeight(); }
+                    public String getName() { return item.getQuantity() + "x " + product.getName(); }
+                    public double getWeight() { return product.getWeight() * item.getQuantity(); }
                 });
             }
         }
@@ -58,7 +58,7 @@ public class Customer {
         double total = subtotal + shippingFees;
 
         if (balance < total) {
-            throw new IllegalStateException("Insufficient balance. Needed: " + total + ", Available: " + balance);
+            throw new IllegalStateException("Insufficient balance. Needed: $" + total + ", Available: $" + balance);
         }
 
         for (CartItem item : cart) {
@@ -71,13 +71,15 @@ public class Customer {
             ShippingService.ship(shippableItems);
         }
 
-        System.out.println("------ Checkout Summary ------");
-        System.out.println("Subtotal: $" + subtotal);
-        System.out.println("Shipping Fees: $" + shippingFees);
-        System.out.println("Total Paid: $" + total);
+        System.out.println("** Checkout receipt **");
+        for (CartItem item : cart) {
+            System.out.println(item.getQuantity() + "x " + item.getProduct().getName() + " $" + (int)item.getPrice());
+        }
+        System.out.println("----------------------");
+        System.out.println("Subtotal: $" + (int)subtotal);
+        System.out.println("Shipping: $" + (int)shippingFees);
+        System.out.println("Amount: $" + (int)total);
         System.out.println("Remaining Balance: $" + balance);
-        System.out.println("------------------------------");
-
         cart.clear();
     }
 
