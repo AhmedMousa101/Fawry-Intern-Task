@@ -26,7 +26,7 @@ public class Main {
 
         Product tv = new Product("TV", 300, 2,
                 new NoExpiry(),
-                new NoShipping());
+                new WeightBasedShipping(10.0));
 
         Product card = new Product("Scratch Card", 30, 10,
                 new NoExpiry(),
