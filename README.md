@@ -1,7 +1,5 @@
 # Fawry Intern Task
 
-This repository contains the solution for the **Fawry Rise Journey Full Stack Development Internship Challenge**.
-
 ## Task Description
 
 Design an e-commerce system with the following features:
